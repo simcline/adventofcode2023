@@ -37,15 +37,15 @@ for i in range(nrows):
 res
 
 ##part 2
-gear_adj_dict = {(i,j): [] for i in range(nrows) for j in range(ncols)}
+gear_adj_dict = {(i, j): [] for i in range(nrows) for j in range(ncols)}
 gear_dict = {}
 gear_neighbours = {}
 
 for i in range(nrows):
     for j in range(ncols):
         if lines[i][j] == '*':
-            gear_dict[(i,j)] = 1
-            gear_neighbours[(i,j)] = 0
+            gear_dict[(i, j)] = 1
+            gear_neighbours[(i, j)] = 0
 
             im1 = max(i - 1, 0)
             jm1 = max(j - 1, 0)
@@ -54,29 +54,29 @@ for i in range(nrows):
 
             for i2 in range(im1, ip1 + 1):
                 for j2 in range(jm1, jp1 + 1):
-                    gear_adj_dict[(i2,j2)].append((i,j))
+                    gear_adj_dict[(i2, j2)].append((i, j))
 
 for i in range(nrows):
-    current_value=0
+    current_value = 0
     gears = set()
     for j in range(ncols):
         if lines[i][j].isnumeric():
             current_value = 10 * current_value + int(lines[i][j])
-            gears= gears.union(set(gear_adj_dict[(i,j)]))
-            if j==ncols-1:
+            gears = gears.union(set(gear_adj_dict[(i, j)]))
+            if j == ncols - 1:
                 for g in gears:
-                    gear_neighbours[g]+=1
-                    gear_dict[g]*=current_value
-                current_value=0
-                gears=set()
+                    gear_neighbours[g] += 1
+                    gear_dict[g] *= current_value
+                current_value = 0
+                gears = set()
         else:
             for g in gears:
                 gear_neighbours[g] += 1
                 gear_dict[g] *= current_value
             current_value = 0
             gears = set()
-res=0
+res = 0
 for g in gear_neighbours:
     if gear_neighbours[g] == 2:
-        res+=gear_dict[g]
+        res += gear_dict[g]
 res
