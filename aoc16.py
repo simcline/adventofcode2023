@@ -1,4 +1,5 @@
 import time
+import numpy as np
 
 with open('aoc16.txt') as f:
     lines = [line[:-1] if line.endswith('\n') else line for line in f]
@@ -121,7 +122,8 @@ def get_energy(init):
     print(f'{init} event computed in {time.time() - start} seconds')
     return int(sum(sum(marked[i, :]) for i in range(nrows)))
 
-get_energy((0,0,0,-1))
+
+get_energy((0, 0, 0, -1))
 # part 2
 
 init_events = []
