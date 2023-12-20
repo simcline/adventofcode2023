@@ -1,5 +1,3 @@
-import numpy as np
-
 with open('aoc18.txt') as f:
     lines = [line[:-1] if line.endswith('\n') else line for line in f]
 
