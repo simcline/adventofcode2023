@@ -84,10 +84,8 @@ class PassiveModule(Module):
 
     def __init__(self, destinations, name):
         super().__init__(destinations, name)
-        self.hasbeenacc = False
 
     def readSignal(self, signal):
-        self.hasbeenacc = self.hasbeenacc or signal[0]=='LOW'
         return []
 
 class ModuleManager:
