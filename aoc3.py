@@ -3,8 +3,7 @@ import numpy as np
 with open('aoc3.txt') as f:
     lines = [line for line in f]
 
-ncols = len(lines[0]) - 1
-nrows = len(lines)
+ncols, nrows = len(lines[0]) - 1, len(lines)
 
 adj_matrix = np.zeros((nrows, ncols))
 

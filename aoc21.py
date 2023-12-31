@@ -1,8 +1,7 @@
 with open('aoc21.txt') as f:
     lines = [line[:-1] if line.endswith('\n') else line for line in f]
 
-nrows = len(lines)
-ncols = len(lines[0])
+nrows, ncols = len(lines), len(lines[0])
 
 for i in range(nrows):
     for j in range(ncols):
@@ -17,7 +16,7 @@ def check_pos(p):
     return lines[i%nrows][j%ncols] != '#'
 
 ps = []
-for i in range(400):
+for i in range(64):
     if i%100 == 0:
         print(i)
     possible_steps_next = set()

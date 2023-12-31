@@ -2,6 +2,9 @@ with open('aoc22.txt') as f:
     lines = [line[:-1] if line.endswith('\n') else line for line in f]
 
 
+
+
+
 class Brick:
 
     def __init__(self, line=None):
@@ -41,7 +44,7 @@ class Brick:
         self.end[2] += delta_z
 
     def canBeDisintegrated(self):
-        return all([len(bricks[j].bricksbelow) > 1 for j in self.bricksabove])
+        return all(len(bricks[j].bricksbelow) > 1 for j in self.bricksabove)
 
     def setName(self, name):
         self.name = name
@@ -50,7 +53,7 @@ class Brick:
         self.bricksabove = []
         self.bricksbelow = []
 
-    def __copy__(self):
+    def __deepcopy__(self):
         ret = Brick.fromStartEnd(self.start.copy(), self.end.copy())
         ret.setName(self.name)
         return ret
@@ -95,7 +98,7 @@ len([b for b in bricks if b.canBeDisintegrated()])
 def compute_number_fall(i0, bricks0):
     print(f'removing brick {i0}')
     n = 0
-    bricks = [b.__copy__() for b in bricks0]
+    bricks = [b.__deepcopy__() for b in bricks0]
 
     for i in range(i0 + 1, len(bricks)):
         lowest_reachable_z = 1
@@ -118,4 +121,4 @@ def compute_number_fall(i0, bricks0):
 
 
 sort_and_make_fall_and_link(bricks)
-sum([compute_number_fall(i, bricks) for i in range(len(bricks)) if not bricks[i].canBeDisintegrated()])
+sum(compute_number_fall(i, bricks) for i in range(len(bricks)) if not bricks[i].canBeDisintegrated())

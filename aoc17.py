@@ -5,9 +5,7 @@ with open('aoc17.txt') as f:
 
 
 def solve(minmove, maxmove):
-    nrows = len(lines)
-    ncols = len(lines[0])
-
+    nrows, ncols = len(lines), len(lines[0])
     final_state = (nrows, ncols - 1, '', 0)
     init_state = (-1, 0, '', 0)
     states = [(i, j, d, k) for i in range(nrows) for j in range(ncols) for d in ['u', 'd', 'l', 'r'] for k in
@@ -74,7 +72,7 @@ def solve(minmove, maxmove):
         return nhgb
 
     ##Disjktra algo on the extended oriented graph
-    while len(neighbours) > 0:
+    while len(neighbours):
         if len(current_graph) % 10000 == 0:
             print(
                 f'size of the explored graph {len(current_graph)}, total size is {len(states)}, neighbours in queue {len(neighbours)}')

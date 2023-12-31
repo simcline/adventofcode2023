@@ -17,7 +17,7 @@ def get_energy(init):
     past_events = []
 
     start = time.time()
-    while len(beams) > 0:
+    while len(beams):
         to_destruct = []
         to_add = []
         for k, b in enumerate(beams):
