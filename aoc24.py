@@ -9,7 +9,6 @@ xmax = 400000000000000
 ymax = 400000000000000
 area = (xmin, xmax, ymin, ymax)
 
-
 class Trajectory:
 
     def __init__(self, line):
@@ -99,9 +98,9 @@ for i in range(len(trajectories)):
 
 counter
 
-# part 2
-# using (in vector notation) that x+t*v = x' + t*v', we essentially use the fact that the vector product of x-x' and v-v' is 0 for all x' and v' in the hailstone set. This yields linear equations that can be projected in (X,Y) and (X,Z).
-# Not particularly interesting and tedious...
+# part 2 using (in vector notation) that x+t*v = x' + t*v', we essentially use the fact that the vector product of
+# x-x' and v-v' is 0 for all x' and v' in the hailstone set. This yields linear equations that can be projected in (
+# X,Y) and (X,Z). Not particularly interesting, and tedious...
 n = 4
 mat = np.zeros((n, n), dtype = 'float64')
 
