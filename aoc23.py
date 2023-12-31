@@ -73,7 +73,7 @@ class Path:
 
     @classmethod
     def clone(cls, path):
-        return cls(path.head, path.lasthead, path.crossroads.copy(), path.length)
+        return cls(path.head, path.lasthead, path.crossroads.deepcopy(), path.length)
 
     def pushHead(self, head, saveLastHead=False, length=1):
         if saveLastHead:

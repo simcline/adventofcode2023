@@ -36,7 +36,7 @@ D = 26501365
 # After trying many geometrical stuff, looking for spatial periodicity and so on.... I realized that D-start[0] is a multiple of
 # nrows, i.e D-start[0] = N*nrows. Then I started to play around with small values of N and realized that the number
 # of possible steps is quadratic in N. This is actually not that surprising because when there are no rocks the
-# solution is exactly in (nrows*N+1)^2. I am not entirely sure about why it works with randomly placed rocks to be
+# solution is exactly in (nrows*(N+1))^2. I am not entirely sure about why it works with randomly placed rocks to be
 # honest, but anyway, here we are and the problem becomes trivial:
 
 N = (D-start[0])/nrows
