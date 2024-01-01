@@ -1,3 +1,5 @@
+import itertools
+
 with open('aoc11.txt') as f:
     lines = [line[:-1] if line.endswith('\n') else line for line in f]
 
@@ -13,10 +15,9 @@ for j in range(len(lines[0])):
 
 galaxies = []
 
-for i in range(len(lines)):
-    for j in range(len(lines[i])):
-        if lines[i][j] == '#':
-            galaxies.append((i, j))
+for i, j in itertools.product(range(len(lines)), range(len(lines[0]))):
+    if lines[i][j] == '#':
+        galaxies.append((i, j))
 
 galaxies.sort()
 
@@ -33,11 +34,8 @@ def compute_sum_dist(m):
                 g_j += m - 1
         galaxies2.append((g_i, g_j))
     galaxies2.sort()
-    dists = 0
-    for i in range(len(galaxies2)):
-        for j in range(i + 1, len(galaxies2)):
-            dists += abs(galaxies2[i][0] - galaxies2[j][0]) + abs(galaxies2[j][1] - galaxies2[i][1])
-    return (dists)
+    return sum(abs(galaxies2[i][0] - galaxies2[j][0]) + abs(galaxies2[j][1] - galaxies2[i][1]) for i, j in
+               itertools.combinations(range(len(galaxies2)), 2))
 
 
 compute_sum_dist(2)

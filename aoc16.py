@@ -136,5 +136,4 @@ for j in range(ncols):
     init_events.append((0, j, -1, j))
     init_events.append((nrows - 1, j, nrows, j))
 
-energies = [get_energy(init) for init in init_events]
-max(energies)
+max(get_energy(init) for init in init_events)

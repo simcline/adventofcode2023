@@ -3,23 +3,21 @@ import time
 with open('aoc23.txt') as f:
     lines = [line[:-1] if line.endswith('\n') else line for line in f]
 
-nrows = len(lines)
-ncols = len(lines[0])
-
+nrows, ncols = len(lines), len(lines[0])
 start = 0, [j for j in range(ncols) if lines[0][j] == '.'][0]
 end = nrows - 1, [j for j in range(ncols) if lines[nrows - 1][j] == '.'][0]
 
-
 def get_next_moves(pos):
     i, j = pos
-    if lines[i][j] == '>':
-        return [(i, j + 1)]
-    if lines[i][j] == '<':
-        return [(i, j - 1)]
-    if lines[i][j] == 'v':
-        return [(i + 1, j)]
-    if lines[i][j] == '^':
-        return [(i - 1, j)]
+    match lines[i][j]:
+        case '>':
+            return [(i, j + 1)]
+        case '<':
+            return [(i, j - 1)]
+        case 'v':
+            return [(i + 1, j)]
+        case '^':
+            return [(i - 1, j)]
 
     ret = []
     if i < nrows - 1 and lines[i + 1][j] in ('.', 'v'):
@@ -73,7 +71,7 @@ class Path:
 
     @classmethod
     def clone(cls, path):
-        return cls(path.head, path.lasthead, path.crossroads.deepcopy(), path.length)
+        return cls(path.head, path.lasthead, path.crossroads.copy(), path.length)
 
     def pushHead(self, head, saveLastHead=False, length=1):
         if saveLastHead:
@@ -130,55 +128,49 @@ def find_neighbours(pos):
 
 
 def check_connected_to_end(pos, barriers):
-    cc = []
-    frontier = [pos]
+    cc = set()
+    frontier = {pos}
 
     while len(frontier):
-        to_add = []
-        to_remove = []
+        to_add = set()
+        to_remove = set()
         for f in frontier:
             if f == end:
                 return True
-            nm = [q[0] for q in graph[f] if q[0] not in frontier + cc + barriers]
+            nm = {q[0] for q in graph[f] if q[0] not in frontier and q[0] not in cc and q[0] not in barriers}
             if len(nm):
-                to_add += nm
+                to_add |= nm
             else:
-                to_remove.append(f)
-                cc.append(f)
-        for r in to_remove:
-            if r in frontier:
-                frontier.remove(r)
-        frontier += to_add
+                to_remove.add(f)
+                cc.add(f)
+        frontier -= to_remove
+        frontier |= to_add
     return False
 
 
 def build_graph():
     d = {}
-    visited = []
-    frontier = [start]
+    visited = set()
+    frontier = {start}
 
     while len(frontier):
-        to_add = []
-        to_remove = []
+        to_add = set()
+        to_remove = set()
 
         for f in frontier:
-            visited.append(f)
+            visited.add(f)
             d[f] = find_neighbours(f)
-            to_remove.append(f)
+            to_remove.add(f)
             for v in d[f]:
                 if v[0] not in visited:
-                    to_add.append(v[0])
-        for r in to_remove:
-            if r in frontier:
-                frontier.remove(r)
-        frontier.extend(to_add)
+                    to_add.add(v[0])
+        frontier -= to_remove
+        frontier |= to_add
     return d
 
 
 graph = build_graph()
-
 starttime = time.time()
-
 
 def compute_longest_path(p):
     if p.head == end:

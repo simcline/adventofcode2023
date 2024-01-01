@@ -53,7 +53,7 @@ heapq.heappush(neighbours, (0, spos))
 
 current_graph = []
 
-while len(neighbours) > 0:
+while len(neighbours) :
     d, next = heapq.heappop(neighbours)
     for nnext in graph[next]:
         d_nnext = distances[nnext]

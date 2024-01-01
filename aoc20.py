@@ -27,7 +27,7 @@ class Module:
     def onHighPulse(self):
         pass
 
-    def send(self, pulse):
+    def generateSignals(self, pulse):
         return [(pulse, d, self.name) for d in self.destinations]
 
     def addSource(self, name):
@@ -46,10 +46,9 @@ class FlipFlopModule(Module):
 
         if self.switch_on:
             self.switch_on = not self.switch_on
-            return self.send('LOW')
-        else:
-            self.switch_on = not self.switch_on
-            return self.send('HIGH')
+            return self.generateSignals('LOW')
+        self.switch_on = not self.switch_on
+        return self.generateSignals('HIGH')
 
 class ConjunctionModule(Module):
 
@@ -62,9 +61,8 @@ class ConjunctionModule(Module):
         self.inputs[sourcename] = pulse
 
         if all(x == 'HIGH' for x in self.inputs.values() ):
-            return self.send('LOW')
-        else:
-            return self.send('HIGH')
+            return self.generateSignals('LOW')
+        return self.generateSignals('HIGH')
 
     def addSource(self, name):
         self.inputs[name] = 'LOW'
@@ -72,10 +70,10 @@ class ConjunctionModule(Module):
 class Broadcaster(Module):
 
     def onLowPulse(self):
-        return self.send('LOW')
+        return self.generateSignals('LOW')
 
     def onHighPulse(self):
-        return self.send('HIGH')
+        return self.generateSignals('HIGH')
 
     def readSignal(self,signal):
         return self.readPulse(signal[0])
@@ -104,8 +102,8 @@ class ModuleManager:
 
         #this is for part 2
         self.current_loop = 0
-        self.rx_ancestor = [k for k in moduleManager.modules['rx'].inputs][0]
-        self.rx_ancestor_2 = [k for k in moduleManager.modules[self.rx_ancestor].inputs]
+        self.rx_ancestor = list(self.modules['rx'].inputs)[0]
+        self.rx_ancestor_2 = list(self.modules[self.rx_ancestor].inputs)
         self.counts_ancestors = {k:[] for k in self.rx_ancestor_2}
 
     def _parse_lines(self,lines):

@@ -1,24 +1,23 @@
+import itertools
+
 with open('aoc21.txt') as f:
     lines = [line[:-1] if line.endswith('\n') else line for line in f]
 
 nrows, ncols = len(lines), len(lines[0])
 
-for i in range(nrows):
-    for j in range(ncols):
-        if lines[i][j] == 'S':
-            start = (i,j)
+for i,j in itertools.product(range(nrows), range(ncols)):
+    if lines[i][j] == 'S':
+        start = (i,j)
+        break
 
 possible_steps = {start}
 possible_steps_next = set()
 
 def check_pos(p):
-    i,j = p
-    return lines[i%nrows][j%ncols] != '#'
+    return lines[p[0]%nrows][p[1]%ncols] != '#'
 
 ps = []
 for i in range(64):
-    if i%100 == 0:
-        print(i)
     possible_steps_next = set()
     for pos in possible_steps:
         j,k = pos

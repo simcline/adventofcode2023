@@ -1,4 +1,5 @@
 import numpy as np
+import itertools
 
 with open('aoc24.txt') as f:
     lines = [line[:-1] if line.endswith('\n') else line for line in f]
@@ -53,7 +54,7 @@ class Trajectory:
 
     def passesThroughAreaXY(self, area):
         se = self.getStartEndXY(area)
-        return any([self.getTFromXY(x) >= 0 for x in se])
+        return any(self.getTFromXY(x) >= 0 for x in se)
 
     def intersectsXY(self, other):
         vx, vy = self.velocity[0:2]
@@ -90,13 +91,7 @@ class Trajectory:
 
 
 trajectories = [Trajectory(l) for l in lines]
-
-counter = 0
-for i in range(len(trajectories)):
-    for j in range(i + 1, len(trajectories)):
-        counter += trajectories[i].intersectsXY(trajectories[j])
-
-counter
+sum(t1.intersectsXY(t2) for t1,t2 in itertools.combinations(trajectories,2))
 
 # part 2 using (in vector notation) that x+t*v = x' + t*v', we essentially use the fact that the vector product of
 # x-x' and v-v' is 0 for all x' and v' in the hailstone set. This yields linear equations that can be projected in (

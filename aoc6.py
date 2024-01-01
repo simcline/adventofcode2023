@@ -7,10 +7,7 @@ with open('aoc6.txt') as f:
 times = [int(x) for x in lines[0][:-1].split('Time: ')[1].split(' ') if x != '']
 distances = [int(x) for x in lines[1][:-1].split('Distance: ')[1].split(' ') if x != '']
 
-reachable_dists = []
-for t, d in zip(times, distances):
-    reachable_dists.append([(t - k) * k > d for k in range(t + 1)])
-
+reachable_dists = [[(t - k) * k > d for k in range(t + 1)] for t, d in zip(times, distances)]
 np.prod([sum(rd) for rd in reachable_dists])
 
 # part 2 : by monotonicity of x->x(t-x) on [0,t/2], we find the first time it reaches the threshold d by dichotomy

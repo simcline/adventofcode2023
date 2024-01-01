@@ -56,7 +56,7 @@ def parse_rule_reverse(x, rule):
 
 def get_seed(loc):
     current = loc
-    mo = [x for x in mapping_order]
+    mo = mapping_order.copy()
     mo.reverse()
     for mapping in mo:
         hasbeen_transformed = False

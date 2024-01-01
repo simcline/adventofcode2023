@@ -17,58 +17,49 @@ def solve(minmove, maxmove):
     neighbours = {}
     neighbours[init_state] = distances[init_state]
 
-    def find_minimal(neighbours):
-        mn = np.Inf
-        for s in neighbours:
-            if neighbours[s] < mn:
-                mn = neighbours[s]
-                best = s
-        del neighbours[best]
-        return mn, best
-
     current_graph = set()
 
     def get_neighbours(state):
         if state == final_state:
-            return []
+            return set()
 
         if state == init_state:
-            return [(0, 0, d, 0) for d in ['d', 'r']]
+            return {(0, 0, d, 0) for d in ['d', 'r']}
 
-        nhgb = []
+        nhgb = set()
         i, j, d, k = state
         if i == ncols - 1 and j == ncols - 1:
-            nhgb += [final_state]
+            nhgb.add(final_state)
 
         match d:
             case 'u':
                 if i > 0 and k < maxmove:
-                    nhgb.append((i - 1, j, d, k + 1))
+                    nhgb.add((i - 1, j, d, k + 1))
                 if j >= minmove and k >= minmove:
-                    nhgb.append((i, j - 1, 'l', 1))
+                    nhgb.add((i, j - 1, 'l', 1))
                 if j < ncols - minmove and k >= minmove:
-                    nhgb.append((i, j + 1, 'r', 1))
+                    nhgb.add((i, j + 1, 'r', 1))
             case 'd':
                 if i < nrows - 1 and k < maxmove:
-                    nhgb.append((i + 1, j, d, k + 1))
+                    nhgb.add((i + 1, j, d, k + 1))
                 if j >= minmove and k >= minmove:
-                    nhgb.append((i, j - 1, 'l', 1))
+                    nhgb.add((i, j - 1, 'l', 1))
                 if j < ncols - minmove and k >= minmove:
-                    nhgb.append((i, j + 1, 'r', 1))
+                    nhgb.add((i, j + 1, 'r', 1))
             case 'l':
                 if j > 0 and k < maxmove:
-                    nhgb.append((i, j - 1, d, k + 1))
+                    nhgb.add((i, j - 1, d, k + 1))
                 if i >= minmove and k >= minmove:
-                    nhgb.append((i - 1, j, 'u', 1))
+                    nhgb.add((i - 1, j, 'u', 1))
                 if i < nrows - minmove and k >= minmove:
-                    nhgb.append((i + 1, j, 'd', 1))
+                    nhgb.add((i + 1, j, 'd', 1))
             case 'r':
                 if j < ncols - 1 and k < maxmove:
-                    nhgb.append((i, j + 1, d, k + 1))
+                    nhgb.add((i, j + 1, d, k + 1))
                 if i >= minmove and k >= minmove:
-                    nhgb.append((i - 1, j, 'u', 1))
+                    nhgb.add((i - 1, j, 'u', 1))
                 if i < nrows - minmove and k >= minmove:
-                    nhgb.append((i + 1, j, 'd', 1))
+                    nhgb.add((i + 1, j, 'd', 1))
         return nhgb
 
     ##Disjktra algo on the extended oriented graph
@@ -76,7 +67,8 @@ def solve(minmove, maxmove):
         if len(current_graph) % 10000 == 0:
             print(
                 f'size of the explored graph {len(current_graph)}, total size is {len(states)}, neighbours in queue {len(neighbours)}')
-        d, next = find_minimal(neighbours)
+        next, d = min(neighbours.items(), key = lambda x: neighbours[x[0]])
+        if next in neighbours: del neighbours[next]
         for nnext in get_neighbours(next):
             if nnext == final_state:
                 delta_dist = 0

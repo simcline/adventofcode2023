@@ -18,22 +18,19 @@ for l in lines:
         graph[r].add(left)
 
 def connected_component(g,graph):
-    cc = []
-    frontier = [g]
+    cc = set()
+    frontier = {g}
     while len(frontier):
-        to_add = []
-        to_remove = []
+        to_add = set()
+        to_remove = set()
         for c in frontier:
             for neighb in graph[c]:
                 if neighb not in frontier and neighb not in cc:
-                    to_add.append(neighb)
-            to_remove.append(c)
-            if c not in cc:
-                cc.append(c)
-        for r in to_remove:
-            if r in frontier:
-                frontier.remove(r)
-        frontier.extend(to_add)
+                    to_add.add(neighb)
+            to_remove.add(c)
+            cc.add(c)
+        frontier -= to_remove
+        frontier |= to_add
     return cc
 
 def delete_edge(g1, g2, graph):
@@ -47,25 +44,16 @@ def get_ccs(graph):
     while len(graph):
         g = graph.keys().__iter__().__next__()
         answ.append(connected_component(g,graph))
-        to_delete = []
+        to_delete = set()
         for c in graph:
             if c in answ[-1]:
-                to_delete.append(c)
+                to_delete.add(c)
         for c in to_delete:
             del graph[c]
     return answ
 
 def find_path(start,end):
     """"dijsktra between start and end"""
-
-    def find_minimal(neighbours):
-        mn = np.Inf
-        for s in neighbours:
-            if neighbours[s] < mn:
-                mn = neighbours[s]
-                best = s
-        del neighbours[best]
-        return mn, best
 
     current_graph = set()
     neighbours = {}
@@ -74,10 +62,10 @@ def find_path(start,end):
     neighbours[start] = distances[start]
 
     while len(neighbours):
-        d, next = find_minimal(neighbours)
+        next, d = min(neighbours.items(), key = lambda x: neighbours[x[0]])
+        if next in neighbours: del neighbours[next]
         for nnext in graph[next]:
-            if d + 1 < distances[nnext]:
-                distances[nnext] = d + 1
+            distances[nnext] = min(distances[nnext], d + 1)
             if nnext not in current_graph:
                 neighbours[nnext] = distances[nnext]
         current_graph.add(next)
@@ -96,14 +84,14 @@ def find_path(start,end):
     path.reverse()
     return path
 
-vertices = [v for v in graph]
+vertices = list(graph)
 n = 500
 freqs = {(v1,v2):0 for v1,v2 in itertools.combinations(vertices,2)}
 
 for i in range(n):
     s = sample(vertices,2)
     path = find_path(s[0],s[1])
-    for p1,p2 in zip(path[:-1], path[1:]):
+    for p1,p2 in itertools.pairwise(path):
         if (p1,p2) in freqs:
             freqs[(p1,p2)]+=1
         else:

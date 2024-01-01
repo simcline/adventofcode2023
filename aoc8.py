@@ -50,5 +50,5 @@ zn_steps = [get_n_steps(z) for z in z_vec]  # p1,...,pN
 # answer is the smallest Q such that Q is of the form k1+alpha1 p1 = ... = kN +alphaN pN with alpha a vector of
 # integers. since we have ki=pi, the answer is the least common multiple of k1,...,kn.
 
-Q = lcm(*n_steps)
-Q
+lcm(*n_steps)
+
